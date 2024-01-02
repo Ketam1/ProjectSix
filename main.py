@@ -12,12 +12,13 @@ def main(conversation_id):
     # Perform analysis
     analyzer = Analyzer(messages)
     
-    # Example: Get statistics for the specific conversation
-    stats = analyzer.get_conversation_stats()
+    # Get all statistics for the specific conversation
+    stats = analyzer.analyze()
 
     # Display or save the analysis results
     print(f"Statistics for Conversation {conversation_id}:")
-    print(stats)
+    for stat, value in stats.items():
+        print(f"{stat}: {value}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

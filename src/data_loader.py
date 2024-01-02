@@ -1,29 +1,23 @@
+# Projeto6/src/data_loader.py
+
 import sqlite3
+from .models.message import Message
 
 class DataLoader:
     def __init__(self, db_path):
         self.db_path = db_path
 
-    def connect(self):
-        """Estabelece conexão com o banco de dados SQLite."""
-        self.conn = sqlite3.connect(self.db_path)
-        self.cursor = self.conn.cursor()
+    def load_messages(self, conversation_id):
+        query = """
+                SELECT * 
+                FROM message_view 
+                WHERE chat_row_id = ?
+                """
+        rows = self.execute_query(query, (conversation_id,))
+        return [Message.from_row(row) for row in rows]
 
-    def execute_query(self, query, params=None):
-        """Executa uma consulta SQL e retorna os resultados."""
-        self.connect()
-        try:
-            if params:
-                self.cursor.execute(query, params)
-            else:
-                self.cursor.execute(query)
-            return self.cursor.fetchall()
-        finally:
-            self.close()
-
-    def close(self):
-        """Fecha a conexão com o banco de dados."""
-        self.cursor.close()
-        self.conn.close()
-
-    # Outras funções específicas para buscar dados conforme necessário
+    def execute_query(self, query, params):
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, params)
+            return cursor.fetchall()
