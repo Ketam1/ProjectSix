@@ -10,7 +10,7 @@ def main(conversation_id):
     messages = data_loader.load_messages(conversation_id)  # Load messages from the specified conversation
 
     # Perform analysis
-    analyzer = Analyzer(messages)
+    analyzer = Analyzer(messages, conversation_id)
     
     # Get all statistics for the specific conversation
     stats = analyzer.analyze()
